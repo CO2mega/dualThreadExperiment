@@ -11,7 +11,7 @@ public  class DataProcessing {
 	}
 	
 	public static User searchUser(String name){
-		if (users.containsKey(name)) {
+		if (users.containsKey(name)) {q
 			return users.get(name);			
 		}
 		return null;
