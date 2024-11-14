@@ -1,10 +1,11 @@
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         boolean exit = false;
-        User currentUser;
+        AbstractUser currentUser;
         while (!exit) {
             System.out.println("****欢迎进入档案系统****");
             System.out.println("       1.登录");
@@ -20,11 +21,14 @@ public class Main {
                     String name = scanner.next();
                     System.out.println("请输入密码：");
                     String password = scanner.next();
-                    currentUser = DataProcessing.search(name, password);
+                    try {
+                        currentUser = DataProcessing.searchUser(name, password);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
                     if (currentUser != null) {
                         System.out.println("登录成功！");
                         currentUser.showMenu();
-                        currentUser = null;
                     } else {
                         System.out.println("用户名或密码错误！");
                     }

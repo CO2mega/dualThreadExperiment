@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class Operator extends User {
+public class Operator extends AbstractUser {
 
     public Operator(String name, String password, String role) {
         super(name, password, role);
@@ -24,6 +24,7 @@ public class Operator extends User {
             switch (choice) {
                 case 1:
                     uploadFile(scanner);
+                    break;
                 case 2:
                 case 3:
                 case 4:
@@ -35,7 +36,9 @@ public class Operator extends User {
                     break;
 
                 case 5:
+                    System.out.println("已退出");
                     exit = true;
+                    break;
                 default:
                     System.out.println("输入错误，请重试");
             }

@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class Browser extends User {
+public class Browser extends AbstractUser {
     public Browser(String name, String password, String role) {
         super(name, password, role);
     }

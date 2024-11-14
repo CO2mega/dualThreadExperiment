@@ -1,7 +1,10 @@
+import java.io.IOException;
+import java.sql.SQLException;
+import java.sql.SQLOutput;
 import java.util.Enumeration;
 import java.util.Scanner;
 
-public class Administrator extends User {
+public class Administrator extends AbstractUser {
     public Administrator(String name, String password, String role) {
         super(name, password, role);
     }
@@ -26,7 +29,17 @@ public class Administrator extends User {
             choice = scanner.nextInt();
             switch (choice) {
                 case 1:
-                    addUser(scanner);
+                    System.out.println("输入你要新建的用户名：");
+                    String name = scanner.next();
+                    System.out.println("输入新建账户的密码：");
+                    String password = scanner.next();
+                    System.out.println("输入新用户的角色：");
+                    String role = scanner.next();
+                    try {
+                        DataProcessing.insertUser(name,password,role);
+                    } catch (SQLException e){
+                        throw new RuntimeException(e);
+                    }
                     break;
                 case 2:
                     delUser(scanner);
@@ -39,6 +52,13 @@ public class Administrator extends User {
                     listUser();
                     break;
                 case 5:
+                    System.out.println("请输入你要下载的文件");
+                    String fileName = scanner.next();
+                    try {
+                        Administrator.downloadFile(fileName);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 case 6:
                 case 7:
                     System.out.println("请输入你要修改的密码");
@@ -53,11 +73,11 @@ public class Administrator extends User {
                     System.out.println("输入错误，请重试");
             }
         } while (!exit);
-        System.out.println("退出登录");
+        Administrator.exitSystem();
     }
 
     private void addUser(Scanner scanner) {
-        User newuser = null;
+        AbstractUser newuser = null;
         System.out.println("请输入你要增加的用户名");
         newuser.setName(scanner.next());
         System.out.println("请输入该用户的密码");
@@ -67,9 +87,13 @@ public class Administrator extends User {
         if (roleChoice == 1) newuser.setRole("administrator");
         else if (roleChoice == 2) newuser.setRole("operator");
         else if (roleChoice == 3) newuser.setRole("browser");
-        if (DataProcessing.insert(newuser.getName(), newuser.getPassword(), newuser.getRole()))
-            System.out.println("用户已新增");
-        else System.out.println("已存在该用户");
+        try {
+            if (DataProcessing.insertUser(newuser.getName(), newuser.getPassword(), newuser.getRole()))
+                System.out.println("用户已新增");
+            else System.out.println("已存在该用户");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -78,30 +102,43 @@ public class Administrator extends User {
         String delUser = scanner.next();
         System.out.printf("你要删除的是：%s,确定请按1，按其他退出", delUser);
         if (scanner.next().equals("1")) {
-            if (DataProcessing.delete(delUser)) System.out.println("成功删除该用户");
-            else System.out.println("删除失败，请确认是否存在该用户");
+            try {
+                if (DataProcessing.deleteUser(delUser)) System.out.println("成功删除该用户");
+                else System.out.println("删除失败，请确认是否存在该用户");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     private void changeUserInfo(Scanner scanner) {
         System.out.println("请输入你要修改的用户名称");
-        User changeuser = null;
+        AbstractUser changeuser = null;
         changeuser.setName(scanner.next());
         System.out.println("请输入你要修改的用户密码");
         changeuser.setPassword(scanner.next());
         System.out.println("请输入你要修改的用户角色");
         changeuser.setRole(scanner.next());
-        if (DataProcessing.update(changeuser.getName(), changeuser.getPassword(), changeuser.getRole()))
-            System.out.println("修改完成");
-        else System.out.println("不存在该用户");
+        try {
+            if (DataProcessing.updateUser(changeuser.getName(), changeuser.getPassword(), changeuser.getRole()))
+                System.out.println("修改完成");
+            else System.out.println("不存在该用户");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void listUser() {
         System.out.println("以下为用户列表");
-        Enumeration<User> userEnumeration = DataProcessing.getAllUser();
+        Enumeration<AbstractUser> userEnumeration = null;
+        try {
+            userEnumeration = DataProcessing.listUser();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println("姓名   密码   角色");
         while (userEnumeration.hasMoreElements()) {
-            User user = userEnumeration.nextElement();
+            AbstractUser user = userEnumeration.nextElement();
             System.out.printf("%s,%s,%s\n", user.getName(), user.getPassword(), user.getRole());
 
         }
