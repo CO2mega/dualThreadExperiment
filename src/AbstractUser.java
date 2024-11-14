@@ -1,117 +1,146 @@
 import java.sql.SQLException;
+import java.util.Enumeration;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
- * TODO ³éÏóÓÃ»§Àà£¬Îª¸÷ÓÃ»§×ÓÀàÌá¹©Ä£°å
+ * TODO æŠ½è±¡ç”¨æˆ·ç±»ï¼Œä¸ºå„ç”¨æˆ·å­ç±»æä¾›æ¨¡æ¿
  *
  * @author gongjing
  * @date 2016/10/13
  */
 public abstract class AbstractUser {
-	private String name;
-	private String password;
-	private String role;
-	static final double EXCEPTION_PROBABILITY=0.9;
-	
-	AbstractUser(String name,String password,String role){
-		this.name=name;
-		this.password=password;
-		this.role=role;				
-	}
-	
-	
-	/**
-	 * TODO ĞŞ¸ÄÓÃ»§×ÔÉíĞÅÏ¢
-	 * 
-	 * @param password ¿ÚÁî
-	 * @return boolean ĞŞ¸ÄÊÇ·ñ³É¹¦
-	 * @throws SQLException   
-	*/
-	public boolean changeSelfInfo(String password) throws SQLException{
-		if (DataProcessing.updateUser(name, password, role)){
-			this.password=password;
-			System.out.println("ĞŞ¸Ä³É¹¦");
-			return true;
-		}else {
-			return false;
-		}
-	}	
-	
-	/**
-	 * TODO ÏÂÔØµµ°¸ÎÄ¼ş
-	 * 
-	 * @param filename ÎÄ¼şÃû
-	 * @return boolean ÏÂÔØÊÇ·ñ³É¹¦
-	 * @throws IOException   
-	*/
-	public static boolean downloadFile(String filename) throws IOException{
-		double ranValue=Math.random();
-		if (ranValue>EXCEPTION_PROBABILITY) {
-			throw new IOException( "Error in accessing file" );}
-		System.out.println("ÏÂÔØÎÄ¼ş... ...");
-		return true;
-	}
-	
-	/**
-	 * TODO Õ¹Ê¾µµ°¸ÎÄ¼şÁĞ±í
-	 * 
-	 * @param 
-	 * @return void
-	 * @throws SQLException 
-	*/
-	public void showFileList() throws SQLException{
-		double ranValue=Math.random();
-		if (ranValue>EXCEPTION_PROBABILITY) {
-			throw new SQLException( "Error in accessing file DB" );}
-		System.out.println("ÁĞ±í... ...");
-	}
-	
-	
-	
-	/**
-	 * TODO Õ¹Ê¾²Ëµ¥£¬Ğè×ÓÀà¼ÓÒÔ¸²¸Ç
-	 *   
-	 * @param 
-	 * @return void
-	 * @throws  
-	*/
-	public abstract void showMenu();
-	
-	/**
-	 * TODO ÍË³öÏµÍ³
-	 *   
-	 * @param 
-	 * @return void
-	 * @throws  
-	*/
-	public static void exitSystem(){
-		System.out.println("ÏµÍ³ÍË³ö, Ğ»Ğ»Ê¹ÓÃ ! ");
-		System.exit(0);
-	}
+    String uploadpath = "C:\\Users\\1\\Desktop\\dualExperiment\\uploadfile\\";
+    String downloadpath = "C:\\Users\\1\\Desktop\\dualExperiment\\downloadfile\\";
+    private String name;
+    private String password;
+    private String role;
 
-	public String getName() {
-		return name;
-	}
+    AbstractUser(String name, String password, String role) {
+        this.name = name;
+        this.password = password;
+        this.role = role;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
 
-	public String getPassword() {
-		return password;
-	}
+    /**
+     * TODO ä¿®æ”¹ç”¨æˆ·è‡ªèº«ä¿¡æ¯
+     *
+     * @param password å£ä»¤
+     * @return boolean ä¿®æ”¹æ˜¯å¦æˆåŠŸ
+     * @throws SQLException
+     */
+    public boolean changeSelfInfo(String password) throws SQLException {
+        if (DataProcessing.updateUser(name, password, role)) {
+            this.password = password;
+            System.out.println("ä¿®æ”¹æˆåŠŸ");
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    /**
+     * TODO ä¸‹è½½æ¡£æ¡ˆæ–‡ä»¶
+     *
+     * @param id æ¡£æ¡ˆç¼–å·
+     * @return boolean ä¸‹è½½æ˜¯å¦æˆåŠŸ
+     * @throws SQLException,IOException
+     */
+    public boolean downloadFile(String id) throws SQLException, IOException {
+//boolean result=false;
+        byte[] buffer = new byte[1024];
+        Doc doc = DataProcessing.searchDoc(id);
 
-	public String getRole() {
-		return role;
-	}
+        if (doc == null) {
+            return false;
+        }
 
-	public void setRole(String role) {
-		this.role = role;
-	}
-	
+        File tempFile = new File(uploadpath + doc.getFilename());
+        String filename = tempFile.getName();
+
+        BufferedInputStream infile = new BufferedInputStream(new FileInputStream(tempFile));
+        BufferedOutputStream targetfile = new BufferedOutputStream(new FileOutputStream(downloadpath + filename));
+
+        while (true) {
+            int byteRead = infile.read(buffer);
+            if (byteRead == -1) {
+                break;
+            }
+            targetfile.write(buffer, 0, byteRead);
+        }
+        infile.close();
+        targetfile.close();
+
+        return true;
+    }
+
+    /**
+     * TODO å±•ç¤ºæ¡£æ¡ˆæ–‡ä»¶åˆ—è¡¨
+     *
+     * @param
+     * @return void
+     * @throws SQLException
+     */
+    public void showFileList() throws SQLException {
+        Enumeration<Doc> e = DataProcessing.listDoc();
+        Doc doc;
+        while (e.hasMoreElements()) {
+            doc = e.nextElement();
+            System.out.println("Id:" + doc.getId() + "\t Creator:" + doc.getCreator() + "\t Time:" + doc.getTimestamp() + "\t Filename:" + doc.getFilename());
+            System.out.println("Description:" + doc.getDescription());
+        }
+
+    }
+
+    /**
+     * TODO å±•ç¤ºèœå•ï¼Œéœ€å­ç±»åŠ ä»¥è¦†ç›–
+     *
+     * @param
+     * @return void
+     * @throws
+     */
+    public abstract void showMenu();
+
+    /**
+     * TODO é€€å‡ºç³»ç»Ÿ
+     *
+     * @param
+     * @return void
+     * @throws
+     */
+    public void exitSystem() {
+        System.out.println("ç³»ç»Ÿé€€å‡º, è°¢è°¢ä½¿ç”¨ ! ");
+        System.exit(0);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
 
 }
