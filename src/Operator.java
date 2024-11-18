@@ -1,4 +1,4 @@
-import java.io.IOException;
+import java.io.*;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -74,7 +74,5 @@ public class Operator extends AbstractUser {
         System.out.println("退出登录");
     }
 
-    private void uploadFile(Scanner scanner) {
-        System.out.println("上传成功");
-    }
+
 }

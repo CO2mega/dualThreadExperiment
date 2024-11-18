@@ -1,4 +1,5 @@
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Enumeration;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -6,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Scanner;
 
 /**
  * TODO 抽象用户类，为各用户子类提供模板
@@ -14,7 +16,7 @@ import java.io.IOException;
  * @date 2016/10/13
  */
 public abstract class AbstractUser {
-    String uploadpath = "C:\\Users\\1\\Desktop\\dualExperiment\\uploadfile\\";
+    static String uploadpath = "C:\\Users\\1\\Desktop\\dualExperiment\\uploadfile\\";
     String downloadpath = "C:\\Users\\1\\Desktop\\dualExperiment\\downloadfile\\";
     private String name;
     private String password;
@@ -26,6 +28,23 @@ public abstract class AbstractUser {
         this.role = role;
     }
 
+    /**
+     * TODO 展示档案文件列表
+     *
+     * @param
+     * @return void
+     * @throws SQLException
+     */
+    public static void showFileList() throws SQLException {
+        Enumeration<Doc> e = DataProcessing.listDoc();
+        Doc doc;
+        while (e.hasMoreElements()) {
+            doc = e.nextElement();
+            System.out.println("Id:" + doc.getId() + "\t Creator:" + doc.getCreator() + "\t Time:" + doc.getTimestamp() + "\t Filename:" + doc.getFilename());
+            System.out.println("Description:" + doc.getDescription());
+        }
+
+    }
 
     /**
      * TODO 修改用户自身信息
@@ -80,24 +99,6 @@ public abstract class AbstractUser {
     }
 
     /**
-     * TODO 展示档案文件列表
-     *
-     * @param
-     * @return void
-     * @throws SQLException
-     */
-    public static void showFileList() throws SQLException {
-        Enumeration<Doc> e = DataProcessing.listDoc();
-        Doc doc;
-        while (e.hasMoreElements()) {
-            doc = e.nextElement();
-            System.out.println("Id:" + doc.getId() + "\t Creator:" + doc.getCreator() + "\t Time:" + doc.getTimestamp() + "\t Filename:" + doc.getFilename());
-            System.out.println("Description:" + doc.getDescription());
-        }
-
-    }
-
-    /**
      * TODO 展示菜单，需子类加以覆盖
      *
      * @param
@@ -142,5 +143,42 @@ public abstract class AbstractUser {
         this.role = role;
     }
 
+    public static void uploadFile(Scanner scanner) {
+        System.out.println("********上传文件********");
+        Scanner sc = new Scanner(System.in);
+        System.out.print("输入文件ID: ");
+        String ID = sc.next();
+        System.out.print("输入文件路径: ");
+        String dir = sc.next();
+        System.out.print("输入文件描述: ");
+        String description = sc.next();
+
+        byte[] buffer = new byte[1024];
+        File temp_file = new File(dir);
+        String filename = temp_file.getName();
+        try {
+            if (DataProcessing.searchDoc(ID)!=null) {
+                System.out.println("上传失败：文件ID重复");
+                return;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            BufferedInputStream infile = new BufferedInputStream(new FileInputStream(temp_file));
+            BufferedOutputStream targetfile = new BufferedOutputStream(new FileOutputStream(uploadpath + filename));
+            while (true) {
+                int byteRead = infile.read(buffer);
+                if (byteRead == -1) break;
+                targetfile.write(buffer, 0, byteRead);
+            }
+            infile.close();
+            targetfile.close();
+        } catch (IOException e) {
+            System.out.println("上传失败");
+            return;
+        }
+        System.out.println("上传成功");
+    }
 
 }
