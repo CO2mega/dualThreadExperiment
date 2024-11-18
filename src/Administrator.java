@@ -80,6 +80,7 @@ public class Administrator extends AbstractUser {
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
+                    break;
                 case 7:
                     System.out.println("请输入你要修改的密码");
                     String newPass = scanner.next();

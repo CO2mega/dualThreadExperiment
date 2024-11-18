@@ -12,7 +12,7 @@ public class DataProcessing {
 
     static Hashtable<String, AbstractUser> users;
     static Hashtable<String, Doc> docs;
-    private static boolean connectToDB = false;
+    private static boolean connectToDB = true;
 
     static {
         users = new Hashtable<String, AbstractUser>();
