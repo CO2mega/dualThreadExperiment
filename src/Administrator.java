@@ -75,6 +75,11 @@ public class Administrator extends AbstractUser {
                     break;
 
                 case 6:
+                    try {
+                        AbstractUser.showFileList();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
                 case 7:
                     System.out.println("请输入你要修改的密码");
                     String newPass = scanner.next();

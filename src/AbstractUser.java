@@ -86,7 +86,7 @@ public abstract class AbstractUser {
      * @return void
      * @throws SQLException
      */
-    public void showFileList() throws SQLException {
+    public static void showFileList() throws SQLException {
         Enumeration<Doc> e = DataProcessing.listDoc();
         Doc doc;
         while (e.hasMoreElements()) {
