@@ -5,7 +5,8 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         boolean exit = false;
-        AbstractUser currentUser;
+        AbstractUser currentUser = null;
+
         while (!exit) {
             System.out.println("****欢迎进入档案系统****");
             System.out.println("       1.登录");
@@ -44,6 +45,7 @@ public class Main {
         }
 
         scanner.close();
+        DataProcessing.serializeDocs();
         System.exit(0);
     }
 }

@@ -1,8 +1,9 @@
 import java.io.IOException;
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class Browser extends AbstractUser {
+public class Browser extends AbstractUser implements Serializable {
     public Browser(String name, String password, String role) {
         super(name, password, role);
     }

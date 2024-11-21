@@ -2,12 +2,10 @@ import java.io.*;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class Operator extends AbstractUser {
-
+public class Operator extends AbstractUser{
     public Operator(String name, String password, String role) {
         super(name, password, role);
     }
-
     @Override
     public void showMenu() {
         int choice;

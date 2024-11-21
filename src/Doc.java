@@ -1,27 +1,28 @@
-import java.sql.Timestamp;
+import java.io.*;
+		import java.sql.Timestamp;
 
-/**
- * TODO 档案文件类
- *
- * @author gongjing
- * @date 2016/10/13
- */
-class Doc{
+class Doc implements Serializable {
 	private String id;
 	private String creator;
 	private Timestamp timestamp;
 	private String description;
 	private String filename;
-	
+
 	public Doc(String id, String creator, Timestamp timestamp, String description, String filename) {
-		super();
 		this.id = id;
 		this.creator = creator;
 		this.timestamp = timestamp;
 		this.description = description;
-		this.filename=filename;
+		this.filename = filename;
 	}
 
+	private void writeObject(ObjectOutputStream out) throws IOException {
+		out.defaultWriteObject();
+	}
+
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+		in.defaultReadObject();
+	}
 	public String getId() {
 		return id;
 	}
@@ -61,5 +62,5 @@ class Doc{
 	public void setFilename(String filename) {
 		this.filename = filename;
 	}
-
+	// Getters and setters...
 }

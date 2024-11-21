@@ -1,10 +1,11 @@
 import java.io.IOException;
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.sql.SQLOutput;
 import java.util.Enumeration;
 import java.util.Scanner;
 
-public class Administrator extends AbstractUser {
+public class Administrator extends AbstractUser implements Serializable {
     public Administrator(String name, String password, String role) {
         super(name, password, role);
     }
@@ -94,7 +95,6 @@ public class Administrator extends AbstractUser {
                     System.out.println("输入错误，请重试");
             }
         } while (!exit);
-        this.exitSystem();
     }
 
     private void addUser(Scanner scanner) {

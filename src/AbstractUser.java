@@ -1,40 +1,53 @@
+import java.io.*;
 import java.sql.SQLException;
-
 import java.util.Enumeration;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Scanner;
 
-/**
- * TODO 抽象用户类，为各用户子类提供模板
- *
- * @author gongjing
- * @date 2016/10/13
- */
-public abstract class AbstractUser {
-    static String uploadpath = ".\\uploadfile\\";
-    String downloadpath = ".\\downloadfile\\";
-    private String name;
-    private String password;
-    private String role;
+public abstract class AbstractUser implements Serializable {
+    protected String name;
+    protected String password;
+    protected String role;
+    protected static String uploadpath = "upload/";
+    protected static String downloadpath = "download/";
 
-    AbstractUser(String name, String password, String role) {
+    public AbstractUser(String name, String password, String role) {
         this.name = name;
         this.password = password;
         this.role = role;
     }
 
-    /**
-     * TODO 展示档案文件列表
-     *
-     * @param
-     * @return void
-     * @throws SQLException
-     */
+    public abstract void showMenu();
+
+    public boolean changeSelfInfo(String password) throws SQLException {
+        if (DataProcessing.updateUser(name, password, role)) {
+            this.password = password;
+            System.out.println("修改成功");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean downloadFile(String id) throws SQLException, IOException {
+        byte[] buffer = new byte[1024];
+        Doc doc = DataProcessing.searchDoc(id);
+
+        if (doc == null) {
+            return false;
+        }
+
+        File tempFile = new File(uploadpath + doc.getFilename());
+        String filename = tempFile.getName();
+
+        try (BufferedInputStream infile = new BufferedInputStream(new FileInputStream(tempFile));
+             BufferedOutputStream targetfile = new BufferedOutputStream(new FileOutputStream(downloadpath + filename))) {
+            int byteRead;
+            while ((byteRead = infile.read(buffer)) != -1) {
+                targetfile.write(buffer, 0, byteRead);
+            }
+        }
+        return true;
+    }
     public static void showFileList() throws SQLException {
         Enumeration<Doc> e = DataProcessing.listDoc();
         Doc doc;
@@ -46,78 +59,6 @@ public abstract class AbstractUser {
 
     }
 
-    /**
-     * TODO 修改用户自身信息
-     *
-     * @param password 口令
-     * @return boolean 修改是否成功
-     * @throws SQLException
-     */
-    public boolean changeSelfInfo(String password) throws SQLException {
-        if (DataProcessing.updateUser(name, password, role)) {
-            this.password = password;
-            System.out.println("修改成功");
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * TODO 下载档案文件
-     *
-     * @param id 档案编号
-     * @return boolean 下载是否成功
-     * @throws SQLException,IOException
-     */
-    public boolean downloadFile(String id) throws SQLException, IOException {
-//boolean result=false;
-        byte[] buffer = new byte[1024];
-        Doc doc = DataProcessing.searchDoc(id);
-
-        if (doc == null) {
-            return false;
-        }
-
-        File tempFile = new File(uploadpath + doc.getFilename());
-        String filename = tempFile.getName();
-
-        BufferedInputStream infile = new BufferedInputStream(new FileInputStream(tempFile));
-        BufferedOutputStream targetfile = new BufferedOutputStream(new FileOutputStream(downloadpath + filename));
-
-        while (true) {
-            int byteRead = infile.read(buffer);
-            if (byteRead == -1) {
-                break;
-            }
-            targetfile.write(buffer, 0, byteRead);
-        }
-        infile.close();
-        targetfile.close();
-
-        return true;
-    }
-
-    /**
-     * TODO 展示菜单，需子类加以覆盖
-     *
-     * @param
-     * @return void
-     * @throws
-     */
-    public abstract void showMenu();
-
-    /**
-     * TODO 退出系统
-     *
-     * @param
-     * @return void
-     * @throws
-     */
-    public void exitSystem() {
-        System.out.println("系统退出, 谢谢使用 ! ");
-        System.exit(0);
-    }
 
     public String getName() {
         return name;
@@ -145,19 +86,17 @@ public abstract class AbstractUser {
 
     public static void uploadFile(Scanner scanner) {
         System.out.println("********上传文件********");
-        Scanner sc = scanner; // 使用传入的scanner对象，避免重复创建
         System.out.print("输入文件ID: ");
-        String ID = sc.next();
+        String ID = scanner.next();
         System.out.print("输入文件路径: ");
-        String dir = sc.next();
+        String dir = scanner.next();
         System.out.print("输入文件描述: ");
-        String description = sc.next();
+        String description = scanner.next();
 
         byte[] buffer = new byte[1024];
         File temp_file = new File(dir);
         String filename = temp_file.getName();
 
-        // 检查文件是否存在
         if (!temp_file.exists() || !temp_file.isFile()) {
             System.out.println("上传失败：文件不存在或不是一个文件");
             return;
@@ -173,19 +112,15 @@ public abstract class AbstractUser {
             return;
         }
 
-        // 确认uploadpath已定义且目标目录存在
         if (uploadpath == null || !(new File(uploadpath).isDirectory())) {
             System.out.println("上传失败：目标路径不存在");
             return;
         }
 
-        try (
-                BufferedInputStream infile = new BufferedInputStream(new FileInputStream(temp_file));
-                BufferedOutputStream targetfile = new BufferedOutputStream(new FileOutputStream(uploadpath + filename))
-        ) {
-            while (true) {
-                int byteRead = infile.read(buffer);
-                if (byteRead == -1) break;
+        try (BufferedInputStream infile = new BufferedInputStream(new FileInputStream(temp_file));
+             BufferedOutputStream targetfile = new BufferedOutputStream(new FileOutputStream(uploadpath + filename))) {
+            int byteRead;
+            while ((byteRead = infile.read(buffer)) != -1) {
                 targetfile.write(buffer, 0, byteRead);
             }
             System.out.println("上传成功");
@@ -193,5 +128,4 @@ public abstract class AbstractUser {
             System.out.println("上传失败：" + e.getMessage());
         }
     }
-
 }

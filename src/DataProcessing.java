@@ -1,13 +1,9 @@
+import java.io.*;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.sql.*;
 
-/**
- * TODO 数据处理类
- *
- * @author gongjing
- * @date 2016/10/13
- */
 public class DataProcessing {
 
     static Hashtable<String, AbstractUser> users;
@@ -15,157 +11,105 @@ public class DataProcessing {
     private static boolean connectToDB = true;
 
     static {
-        users = new Hashtable<String, AbstractUser>();
+        users = new Hashtable<>();
         users.put("rose", new Browser("rose", "123", "browser"));
         users.put("jack", new Operator("jack", "123", "operator"));
         users.put("kate", new Administrator("kate", "123", "administrator"));
-        init();
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        docs = new Hashtable<String, Doc>();
+        docs = new Hashtable<>();
         docs.put("0001", new Doc("0001", "jack", timestamp, "Doc Source Java", "Doc.java"));
+        init();
     }
 
-    /**
-     * TODO 初始化，连接数据库
-     *
-     * @param
-     * @return void
-     * @throws
-     */
     public static void init() {
-        connectToDB = true;
+        String projectPath = System.getProperty("user.dir");
+        String docsFilePath = projectPath + File.separator + "Doc.out";
+        String usersFilePath = projectPath + File.separator + "Users.out";
+
+        try {
+            docs = readHashtable(docsFilePath);
+            users = readHashtable(usersFilePath);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
-    /**
-     * TODO 按档案编号搜索档案信息，返回null时表明未找到
-     *
-     * @param id
-     * @return Doc
-     * @throws SQLException
-     */
+    private static <K, V> Hashtable<K, V> readHashtable(String filePath) throws IOException, ClassNotFoundException {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filePath))) {
+            return (Hashtable<K, V>) in.readObject();
+        }
+    }
+
+    public static void serializeDocs() {
+        String projectPath = System.getProperty("user.dir");
+        String docsFilePath = projectPath + File.separator + "Doc.out";
+        String usersFilePath = projectPath + File.separator + "Users.out";
+
+        try (ObjectOutputStream docsOut = new ObjectOutputStream(new FileOutputStream(docsFilePath));
+             ObjectOutputStream usersOut = new ObjectOutputStream(new FileOutputStream(usersFilePath))) {
+            docsOut.writeObject(docs);
+            usersOut.writeObject(users);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static Doc searchDoc(String id) throws SQLException {
         if (!connectToDB) {
             throw new SQLException("Not Connected to Database");
         }
-        if (docs.containsKey(id)) {
-            Doc temp = docs.get(id);
-            return temp;
-        }
-        return null;
+        return docs.get(id);
     }
 
-    /**
-     * TODO 列出所有档案信息
-     *
-     * @param
-     * @return Enumeration<Doc>
-     * @throws SQLException
-     */
     public static Enumeration<Doc> listDoc() throws SQLException {
         if (!connectToDB) {
             throw new SQLException("Not Connected to Database");
         }
-
-        Enumeration<Doc> e = docs.elements();
-        return e;
+        return docs.elements();
     }
 
-    /**
-     * TODO 插入新的档案
-     *
-     * @param id
-     * @param creator
-     * @param timestamp
-     * @param description
-     * @param filename
-     * @return boolean
-     * @throws SQLException
-     */
     public static boolean insertDoc(String id, String creator, Timestamp timestamp, String description, String filename) throws SQLException {
-        Doc doc;
-
         if (!connectToDB) {
             throw new SQLException("Not Connected to Database");
         }
-
-        if (docs.containsKey(id))
+        if (docs.containsKey(id)) {
             return false;
-        else {
-            doc = new Doc(id, creator, timestamp, description, filename);
+        } else {
+            Doc doc = new Doc(id, creator, timestamp, description, filename);
             docs.put(id, doc);
             return true;
         }
     }
 
-    /**
-     * TODO 按用户名搜索用户，返回null时表明未找到符合条件的用户
-     *
-     * @param name 用户名
-     * @return AbstractUser
-     * @throws SQLException
-     */
     public static AbstractUser searchUser(String name) throws SQLException {
         if (!connectToDB) {
             throw new SQLException("Not Connected to Database");
         }
-
-        if (users.containsKey(name)) {
-            return users.get(name);
-        }
-        return null;
+        return users.get(name);
     }
 
-    /**
-     * TODO 按用户名、密码搜索用户，返回null时表明未找到符合条件的用户
-     *
-     * @param name     用户名
-     * @param password 密码
-     * @return AbstractUser
-     * @throws SQLException
-     */
     public static AbstractUser searchUser(String name, String password) throws SQLException {
         if (!connectToDB) {
             throw new SQLException("Not Connected to Database");
         }
-
-        if (users.containsKey(name)) {
-            AbstractUser temp = users.get(name);
-            if ((temp.getPassword()).equals(password)) {
-                return temp;
-            }
+        AbstractUser user = users.get(name);
+        if (user != null && user.getPassword().equals(password)) {
+            return user;
         }
         return null;
     }
 
-    /**
-     * TODO 取出所有的用户
-     *
-     * @param
-     * @return Enumeration<AbstractUser>
-     * @throws SQLException
-     */
     public static Enumeration<AbstractUser> listUser() throws SQLException {
         if (!connectToDB) {
             throw new SQLException("Not Connected to Database");
         }
-
-        Enumeration<AbstractUser> e = users.elements();
-        return e;
+        return users.elements();
     }
 
-    /**
-     * TODO 修改用户信息
-     *
-     * @param name     用户名
-     * @param password 密码
-     * @param role     角色
-     * @return boolean
-     * @throws SQLException
-     */
     public static boolean updateUser(String name, String password, String role) throws SQLException {
-        AbstractUser user;
         if (users.containsKey(name)) {
+            AbstractUser user;
             switch (ROLE_ENUM.valueOf(role.toLowerCase())) {
                 case administrator:
                     user = new Administrator(name, password, role);
@@ -183,20 +127,11 @@ public class DataProcessing {
         }
     }
 
-    /**
-     * TODO 插入新用户
-     *
-     * @param name     用户名
-     * @param password 密码
-     * @param role     角色
-     * @return boolean
-     * @throws SQLException
-     */
     public static boolean insertUser(String name, String password, String role) throws SQLException {
-        AbstractUser user;
         if (users.containsKey(name)) {
             return false;
         } else {
+            AbstractUser user;
             switch (ROLE_ENUM.valueOf(role.toLowerCase())) {
                 case administrator:
                     user = new Administrator(name, password, role);
@@ -212,13 +147,6 @@ public class DataProcessing {
         }
     }
 
-    /**
-     * TODO 删除指定用户
-     *
-     * @param name 用户名
-     * @return boolean
-     * @throws SQLException
-     */
     public static boolean deleteUser(String name) throws SQLException {
         if (users.containsKey(name)) {
             users.remove(name);
@@ -228,39 +156,18 @@ public class DataProcessing {
         }
     }
 
-    /**
-     * TODO 关闭数据库连接
-     *
-     * @param
-     * @return void
-     * @throws
-     */
     public static void disconnectFromDataBase() {
         if (connectToDB) {
-            // close Statement and Connection
-            try {
-
-            } finally {
-                connectToDB = false;
-            }
+            connectToDB = false;
         }
     }
 
-    static enum ROLE_ENUM {
-        /**
-         * administrator
-         */
+    enum ROLE_ENUM {
         administrator("administrator"),
-        /**
-         * operator
-         */
         operator("operator"),
-        /**
-         * browser
-         */
         browser("browser");
 
-        private String role;
+        private final String role;
 
         ROLE_ENUM(String role) {
             this.role = role;
