@@ -1,5 +1,5 @@
 import java.sql.SQLException;
-import java.sql.Timestamp;
+
 import java.util.Enumeration;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -16,8 +16,8 @@ import java.util.Scanner;
  * @date 2016/10/13
  */
 public abstract class AbstractUser {
-    static String uploadpath = "C:\\Users\\1\\Desktop\\dualExperiment\\uploadfile\\";
-    String downloadpath = "C:\\Users\\1\\Desktop\\dualExperiment\\downloadfile\\";
+    static String uploadpath = ".\\uploadfile\\";
+    String downloadpath = ".\\downloadfile\\";
     private String name;
     private String password;
     private String role;
@@ -145,7 +145,7 @@ public abstract class AbstractUser {
 
     public static void uploadFile(Scanner scanner) {
         System.out.println("********上传文件********");
-        Scanner sc = new Scanner(System.in);
+        Scanner sc = scanner; // 使用传入的scanner对象，避免重复创建
         System.out.print("输入文件ID: ");
         String ID = sc.next();
         System.out.print("输入文件路径: ");
@@ -156,29 +156,42 @@ public abstract class AbstractUser {
         byte[] buffer = new byte[1024];
         File temp_file = new File(dir);
         String filename = temp_file.getName();
+
+        // 检查文件是否存在
+        if (!temp_file.exists() || !temp_file.isFile()) {
+            System.out.println("上传失败：文件不存在或不是一个文件");
+            return;
+        }
+
         try {
-            if (DataProcessing.searchDoc(ID)!=null) {
+            if (DataProcessing.searchDoc(ID) != null) {
                 System.out.println("上传失败：文件ID重复");
                 return;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println("数据库查询错误：" + e.getMessage());
+            return;
         }
-        try {
-            BufferedInputStream infile = new BufferedInputStream(new FileInputStream(temp_file));
-            BufferedOutputStream targetfile = new BufferedOutputStream(new FileOutputStream(uploadpath + filename));
+
+        // 确认uploadpath已定义且目标目录存在
+        if (uploadpath == null || !(new File(uploadpath).isDirectory())) {
+            System.out.println("上传失败：目标路径不存在");
+            return;
+        }
+
+        try (
+                BufferedInputStream infile = new BufferedInputStream(new FileInputStream(temp_file));
+                BufferedOutputStream targetfile = new BufferedOutputStream(new FileOutputStream(uploadpath + filename))
+        ) {
             while (true) {
                 int byteRead = infile.read(buffer);
                 if (byteRead == -1) break;
                 targetfile.write(buffer, 0, byteRead);
             }
-            infile.close();
-            targetfile.close();
+            System.out.println("上传成功");
         } catch (IOException e) {
-            System.out.println("上传失败");
-            return;
+            System.out.println("上传失败：" + e.getMessage());
         }
-        System.out.println("上传成功");
     }
 
 }
