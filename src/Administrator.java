@@ -91,10 +91,12 @@ public class Administrator extends AbstractUser implements Serializable {
                     break;
                 case 8:
                     exit = true;
+                    break;
                 default:
                     System.out.println("输入错误，请重试");
             }
         } while (!exit);
+        System.out.println("已退出");
     }
 
     private void addUser(Scanner scanner) {

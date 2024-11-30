@@ -19,6 +19,8 @@ public class DataProcessing {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         docs = new Hashtable<>();
         docs.put("0001", new Doc("0001", "jack", timestamp, "Doc Source Java", "Doc.java"));
+        docs.put("0002", new Doc("0002", "rose", timestamp, "Doc Source Python", "Doc.py"));
+
         init();
     }
 
