@@ -7,8 +7,8 @@ public abstract class AbstractUser implements Serializable {
     protected String name;
     protected String password;
     protected String role;
-    protected static String uploadpath = "upload/";
-    protected static String downloadpath = "download/";
+    protected static String uploadpath = "uploadfile/";
+    protected static String downloadpath = "downloadfile/";
 
     public AbstractUser(String name, String password, String role) {
         this.name = name;
@@ -28,7 +28,7 @@ public abstract class AbstractUser implements Serializable {
         }
     }
 
-    public boolean downloadFile(String id) throws SQLException, IOException {
+    public static boolean downloadFile(String id) throws SQLException, IOException {
         byte[] buffer = new byte[1024];
         Doc doc = DataProcessing.searchDoc(id);
 

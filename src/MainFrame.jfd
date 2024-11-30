@@ -1,0 +1,301 @@
+JFDML JFormDesigner: "8.2.4.0.393" Java: "21.0.5" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+			name: "this"
+			"defaultCloseOperation": 3
+			"preferredSize": new java.awt.Dimension( 600, 400 )
+			"$sizePolicy": 1
+			add( new FormContainer( "javax.swing.JTabbedPane", new FormLayoutManager( class javax.swing.JTabbedPane ) ) {
+				name: "tabbedPane1"
+				"font": new java.awt.Font( "Microsoft YaHei UI", 0, 18 )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+					name: "ArchiveManage"
+					"font": new java.awt.Font( "Microsoft YaHei UI", 0, 16 )
+					add( new FormContainer( "javax.swing.JTabbedPane", new FormLayoutManager( class javax.swing.JTabbedPane ) ) {
+						name: "ArchiveMngTbdp"
+						"tabPlacement": 2
+						"font": new java.awt.Font( "Microsoft YaHei UI", 0, 16 )
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+							name: "ListArchive"
+							add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+								name: "scrollPane1"
+								add( new FormComponent( "javax.swing.JTable" ) {
+									name: "FileList1"
+									"autoResizeMode": 4
+									"autoCreateRowSorter": true
+									"enabled": false
+									"showHorizontalLines": true
+									"showVerticalLines": true
+									"model": &SwingTableModel0 new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector {
+										add( "ID" )
+										add( "文件名" )
+										add( "时间" )
+										add( "创建者" )
+										add( "文件描述" )
+									}, new java.util.Vector {
+										add( null )
+										add( null )
+										add( null )
+										add( null )
+										add( null )
+									}, new java.util.Vector {
+										add( false )
+										add( null )
+										add( null )
+										add( null )
+										add( null )
+									}, new java.util.Vector {
+										add( null )
+										add( null )
+										add( null )
+										add( null )
+										add( null )
+									} )
+									"font": new java.awt.Font( "Microsoft YaHei UI", 0, 14 )
+								} )
+							}, new FormLayoutConstraints( class java.lang.String ) {
+								"value": "Center"
+							} )
+						}, new FormLayoutConstraints( null ) {
+							"title": "档案列表"
+						} )
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+							name: "DownLoadArchive"
+							add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+								name: "scrollPane2"
+								add( new FormComponent( "javax.swing.JTable" ) {
+									name: "FileList2"
+									"autoResizeMode": 4
+									"autoCreateRowSorter": true
+									"showHorizontalLines": true
+									"showVerticalLines": true
+									"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector {
+										add( new java.util.Vector {
+											add( null )
+											add( null )
+											add( null )
+										} )
+									}, new java.util.Vector {
+										add( null )
+										add( null )
+										add( null )
+									}, new java.util.Vector {
+										add( null )
+										add( null )
+										add( class java.lang.Boolean )
+									}, new java.util.Vector {
+										add( null )
+										add( null )
+										add( null )
+									}, new java.util.Vector {
+										add( null )
+										add( null )
+										add( null )
+									} )
+									"font": new java.awt.Font( "Microsoft YaHei UI", 0, 14 )
+								} )
+							}, new FormLayoutConstraints( class java.lang.String ) {
+								"value": "Center"
+							} )
+							add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) ) {
+								name: "panel7"
+								"componentOrientation": sfield java.awt.ComponentOrientation RIGHT_TO_LEFT
+								add( new FormComponent( "javax.swing.JButton" ) {
+									name: "choseAll"
+									"text": "全选"
+									addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "choseAllMouseClicked", true ) )
+									addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "choseAllMouseClicked", true ) )
+								} )
+								add( new FormComponent( "javax.swing.JButton" ) {
+									name: "clearChoose"
+									"text": "清除选中"
+									"horizontalAlignment": 4
+									addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "clearChooseMouseClicked", true ) )
+								} )
+								add( new FormComponent( "javax.swing.JButton" ) {
+									name: "downloadButton"
+									"text": "下载"
+									addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "downloadButtonMouseClicked", true ) )
+								} )
+							}, new FormLayoutConstraints( class java.lang.String ) {
+								"value": "South"
+							} )
+						}, new FormLayoutConstraints( null ) {
+							"title": "下载档案"
+						} )
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+							name: "UploadArchive"
+							add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+								name: "panel9"
+								add( new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
+									name: "menuBar2"
+									add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+										name: "uploadMenu"
+										"text": "上传文件"
+										"font": new java.awt.Font( "Microsoft YaHei UI", 0, 14 )
+										add( new FormComponent( "javax.swing.JMenuItem" ) {
+											name: "addinGUI"
+											"text": "GUI选择器"
+											"font": new java.awt.Font( "Microsoft YaHei UI", 0, 14 )
+											addEvent( new FormEvent( "java.awt.event.MouseListener", "mousePressed", "addinGUIMousePressed", true ) )
+										} )
+										add( new FormComponent( "javax.swing.JMenuItem" ) {
+											name: "addinPath"
+											"text": "路径添加"
+											"font": new java.awt.Font( "Microsoft YaHei UI", 0, 14 )
+											addEvent( new FormEvent( "java.awt.event.MouseListener", "mousePressed", "addinPathMousePressed", true ) )
+										} )
+									} )
+								}, new FormLayoutConstraints( class java.lang.String ) {
+									"value": "Center"
+								} )
+							}, new FormLayoutConstraints( class java.lang.String ) {
+								"value": "North"
+							} )
+							add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+								name: "scrollPane3"
+								add( new FormComponent( "javax.swing.JTable" ) {
+									name: "UpLoadFileList"
+									"autoResizeMode": 4
+									"autoCreateRowSorter": true
+									"showHorizontalLines": true
+									"showVerticalLines": true
+									"model": #SwingTableModel0
+									"font": new java.awt.Font( "Microsoft YaHei UI", 0, 14 )
+								} )
+							}, new FormLayoutConstraints( class java.lang.String ) {
+								"value": "Center"
+							} )
+							add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) ) {
+								name: "panel8"
+								"componentOrientation": sfield java.awt.ComponentOrientation RIGHT_TO_LEFT
+								add( new FormComponent( "javax.swing.JButton" ) {
+									name: "Delchosen"
+									"text": "删除选中"
+									"font": new java.awt.Font( "Microsoft YaHei UI", 0, 12 )
+								} )
+								add( new FormComponent( "javax.swing.JButton" ) {
+									name: "clearQueue"
+									"text": "清空队列"
+									"font": new java.awt.Font( "Microsoft YaHei UI", 0, 12 )
+									addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "clearQueueMouseClicked", true ) )
+								} )
+								add( new FormComponent( "javax.swing.JButton" ) {
+									name: "Uploadbutton"
+									"text": "上传"
+									"font": new java.awt.Font( "Microsoft YaHei UI", 0, 12 )
+									addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "UploadbuttonMouseClicked", true ) )
+								} )
+							}, new FormLayoutConstraints( class java.lang.String ) {
+								"value": "South"
+							} )
+						}, new FormLayoutConstraints( null ) {
+							"title": "上传档案"
+						} )
+					}, new FormLayoutConstraints( class java.lang.String ) {
+						"value": "Center"
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": "档案管理"
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+					name: "UserManage"
+					"font": new java.awt.Font( "Microsoft YaHei UI", 0, 12 )
+				}, new FormLayoutConstraints( null ) {
+					"title": "用户管理"
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+					name: "MyProfile"
+					"font": new java.awt.Font( "Microsoft YaHei UI", 0, 20 )
+					add( new FormContainer( "javax.swing.JTabbedPane", new FormLayoutManager( class javax.swing.JTabbedPane ) ) {
+						name: "MyPrrofileTbdP"
+						"tabPlacement": 2
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+							name: "logOut"
+						}, new FormLayoutConstraints( null ) {
+							"title": "注销登录"
+						} )
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+							"$horizontalGroup": "par l {seq l {space ::110:x, par l {comp slider1:::::x, comp label6:::::x}, space ::135:x}}"
+							"$verticalGroup": "par l {seq l {space ::17:x, comp label6:::::x, space s:::x, comp slider1:::::x, space :p:236:p}}"
+						} ) {
+							name: "exitSys"
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label6"
+								"text": "确定退出请拖动到右侧"
+								"font": new java.awt.Font( "Microsoft YaHei UI", 0, 28 )
+							} )
+							add( new FormComponent( "javax.swing.JSlider" ) {
+								name: "slider1"
+								"value": 0
+								"font": new java.awt.Font( "Microsoft YaHei UI", 0, 28 )
+								"paintTicks": true
+								"paintLabels": true
+								addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "slider1StateChanged", true ) )
+							} )
+						}, new FormLayoutConstraints( null ) {
+							"title": "退出系统"
+						} )
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+							"$horizontalGroup": "par l {seq {space :p:86:p, par l {comp label3::::41:x, comp label4:::::x, comp label5::l::41:x}, space u:::p, par l {seq l {comp CodeCMP:::p::p, space s:::p, comp CodeSource:::p::p}, par l:l::p {comp OriginPasswd:::::x, seq l {comp button1:::p::p, space :p:73:p, comp button2:::p::p}, comp NewPasswd::l:p:225:p}}, space :p:161:p}}"
+							"$verticalGroup": "par l {seq {space :p:57:p, par l:::p {comp label3:::::x, comp OriginPasswd:::p::p}, space s:::p, par b {comp NewPasswd::b:p::p, comp label4::b:p:27:p}, space u:::p, par b {comp CodeCMP::b:p::p, comp CodeSource::b:p::p, comp label5::b:::x}, space :p:87:p, par b {comp button1::b:p::p, comp button2::b:p::p}, space :p:120:p}}"
+						} ) {
+							name: "changePasswd"
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "button1"
+								"text": "清除"
+								addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "button1MouseClicked", true ) )
+							} )
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "button2"
+								"text": "确定"
+								addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "button2MouseClicked", true ) )
+							} )
+							add( new FormComponent( "javax.swing.JPasswordField" ) {
+								name: "OriginPasswd"
+							} )
+							add( new FormComponent( "javax.swing.JPasswordField" ) {
+								name: "NewPasswd"
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label3"
+								"text": "原密码"
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label4"
+								"text": "新密码"
+							} )
+							add( new FormComponent( "javax.swing.JTextField" ) {
+								name: "CodeCMP"
+							} )
+							add( new FormComponent( "javax.swing.JTextField" ) {
+								name: "CodeSource"
+								"editable": false
+								"text": "点击获取验证码"
+								addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "CodeSourceMouseClicked", true ) )
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label5"
+								"text": "验证码"
+							} )
+						}, new FormLayoutConstraints( null ) {
+							"title": "修改密码"
+						} )
+					}, new FormLayoutConstraints( class java.lang.String ) {
+						"value": "Center"
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": "我的"
+				} )
+			}, new FormLayoutConstraints( class java.lang.String ) {
+				"value": "Center"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 20 )
+			"size": new java.awt.Dimension( 600, 400 )
+		} )
+	}
+}
