@@ -39,6 +39,10 @@ public class MainFrame extends JFrame {
     private static Vector<Docs> UploadQueuedDocs = new Vector<>();
     private final AbstractUser user;
     private int CodeGen;
+    private Vector<Doc> cachedDocs = new Vector<>();
+    private Vector<AbstractUser> cachedUsers = new Vector<>();
+    private int UserCount = 0;
+    private String[] roles = {"administrator", "operator", "browser"};
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
     private JMenuBar menuBar1;
     private JMenu UserName;
@@ -152,17 +156,25 @@ public class MainFrame extends JFrame {
     }
 
     private void UserListAction() {
-        DefaultTableModel model = new DefaultTableModel(new Object[][]{
-
-        }, new Object[]{"姓名", "密码", "角色"});
+        DefaultTableModel model = new DefaultTableModel(new Object[][]{}, new String[]{"姓名", "密码", "角色"}) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                if (row < UserCount && column == 0 ||user.getName().equals(getValueAt(row, 0).toString())) {
+                    return false;
+                }
+                return true;
+            }
+        };
 
         UserList.setModel(model);
-        Enumeration<AbstractUser> e = null;
+        UserList.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JComboBox<>(roles)));
         try {
-            e = DataProcessing.listUser();
-
+            Enumeration<AbstractUser> e = DataProcessing.listUser();
+            cachedUsers.clear(); // Clear the cache before populating
             while (e.hasMoreElements()) {
                 AbstractUser user = e.nextElement();
+                cachedUsers.add(user); // Add to cache
+                UserCount++;
                 model.addRow(new Object[]{user.getName(), user.getPassword(), user.getRole()});
             }
         } catch (SQLException ex) {
@@ -185,17 +197,14 @@ public class MainFrame extends JFrame {
     }
 
     private void showFileListAction() {
-        DefaultTableModel model = new DefaultTableModel(new Object[][]{
-
-        }, new Object[]{"ID", "文件名", "时间", "上传者", "文件描述"});
-
+        DefaultTableModel model = new DefaultTableModel(new Object[][]{}, new Object[]{"ID", "文件名", "时间", "上传者", "文件描述"});
         FileList1.setModel(model);
-        Enumeration<Doc> e = null;
         try {
-            e = DataProcessing.listDoc();
-
+            Enumeration<Doc> e = DataProcessing.listDoc();
+            cachedDocs.clear(); // Clear the cache before populating
             while (e.hasMoreElements()) {
                 Doc doc = e.nextElement();
+                cachedDocs.add(doc); // Add to cache
                 model.addRow(new Object[]{doc.getId(), doc.getFilename(), doc.getTimestamp(), doc.getCreator(), doc.getDescription()});
             }
         } catch (SQLException ex) {
@@ -486,35 +495,30 @@ public class MainFrame extends JFrame {
         String keyword = FileSearchField.getText();
         DefaultTableModel model = new DefaultTableModel(new Object[][]{}, new Object[]{"ID", "文件名", "时间", "上传者", "文件描述"});
         FileList1.setModel(model);
-        Enumeration<Doc> en = null;
-        try {
-            en = DataProcessing.listDoc();
-            while (en.hasMoreElements()) {
-                Doc doc = en.nextElement();
-                if (doc.getId().contains(keyword) || doc.getFilename().contains(keyword) || doc.getDescription().contains(keyword) || new String(String.valueOf(doc.getTimestamp())).contains(keyword) || doc.getCreator().contains(keyword)) {
-                    model.addRow(new Object[]{doc.getId(), doc.getFilename(), doc.getTimestamp(), doc.getCreator(), doc.getDescription()});
-                }
+        for (Doc doc : cachedDocs) {
+            if (doc.getId().contains(keyword) || doc.getFilename().contains(keyword) || doc.getDescription().contains(keyword) || new String(String.valueOf(doc.getTimestamp())).contains(keyword) || doc.getCreator().contains(keyword)) {
+                model.addRow(new Object[]{doc.getId(), doc.getFilename(), doc.getTimestamp(), doc.getCreator(), doc.getDescription()});
             }
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
         }
     }
 
     private void UserSearchFieldKeyReleased(KeyEvent e) {
         String keyword = UserSearchField.getText();
-        DefaultTableModel model = new DefaultTableModel(new Object[][]{}, new Object[]{"姓名", "密码", "角色"});
-        UserList.setModel(model);
-        Enumeration<AbstractUser> en = null;
-        try {
-            en = DataProcessing.listUser();
-            while (en.hasMoreElements()) {
-                AbstractUser user = en.nextElement();
-                if (user.getName().contains(keyword) || user.getPassword().contains(keyword) || user.getRole().contains(keyword)) {
-                    model.addRow(new Object[]{user.getName(), user.getPassword(), user.getRole()});
+        DefaultTableModel model1 = new DefaultTableModel(new Object[][]{}, new String[]{"姓名", "密码", "角色"}) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                if (row < UserCount && column == 0 ||user.getName().equals(getValueAt(row, 0).toString())) {
+                    return false;
                 }
+                return true;
             }
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+        };
+        UserList.setModel(model1);
+        UserList.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JComboBox<>(roles)));
+        for (AbstractUser user : cachedUsers) {
+            if (user.getName().contains(keyword) || user.getPassword().contains(keyword) || user.getRole().contains(keyword)) {
+                model1.addRow(new Object[]{user.getName(), user.getPassword(), user.getRole()});
+            }
         }
     }
 
@@ -544,36 +548,6 @@ public class MainFrame extends JFrame {
         }
     }
 
-//    private void SaveUserListMouseClicked(MouseEvent e) {
-//        DefaultTableModel model = (DefaultTableModel) UserList.getModel();
-//        for (int i = 0; i < model.getRowCount(); i++) {
-//            String name = (String) model.getValueAt(i, 0);
-//            String password = (String) model.getValueAt(i, 1);
-//            String role = (String) model.getValueAt(i, 2);
-//            if (name.isEmpty() || password.isEmpty() || role.isEmpty()) {
-//                JOptionPane.showMessageDialog(null, "请填写完整第" + (i + 1) + "条" + ((name.isEmpty()) ? "姓名" : (password.isEmpty()) ? "密码" : "角色"), "错误", JOptionPane.ERROR_MESSAGE);
-//                return;
-//            }
-//            if (!role.equals("administrator") && !role.equals("operator") && !role.equals("browser")) {
-//                JOptionPane.showMessageDialog(null, "角色只能为administrator/operator/browser", "错误", JOptionPane.ERROR_MESSAGE);
-//                return;
-//            }
-//            try {
-//                if (DataProcessing.updateUser(name, password, role)) {
-//                    JOptionPane.showMessageDialog(null, "修改"+name+"成功", "提示", JOptionPane.INFORMATION_MESSAGE);
-//                } else {
-//                    if (DataProcessing.insertUser(name, password, role)) {
-//                        JOptionPane.showMessageDialog(null, "新增"+name+"成功", "提示", JOptionPane.INFORMATION_MESSAGE);
-//                    } else {
-//                        JOptionPane.showMessageDialog(null, "新增失败", "错误", JOptionPane.ERROR_MESSAGE);
-//                    }
-//                }
-//            } catch (SQLException ex) {
-//                throw new RuntimeException(ex);
-//            }
-//        }
-//        UserListAction();
-//    }
 private void SaveUserListMouseClicked(MouseEvent e) {
     DefaultTableModel model = (DefaultTableModel) UserList.getModel();
     for (int i = model.getRowCount() - 1; i >= 0; i--) { // 从后向前遍历，避免索引问题

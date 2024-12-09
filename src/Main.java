@@ -45,7 +45,6 @@ public class Main {
         }
 
         scanner.close();
-        DataProcessing.serializeDocs();
         System.exit(0);
     }
 }
