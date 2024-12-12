@@ -58,13 +58,6 @@ public class MainFrame extends JFrame {
     private JTable FileList1;
     private JPanel panel2;
     private JTextField FileSearchField;
-    private JPanel DownLoadArchive;
-    private JScrollPane scrollPane2;
-    private JTable FileList2;
-    private JPanel panel7;
-    private JButton choseAll;
-    private JButton clearChoose;
-    private JButton downloadButton;
     private JPanel UploadArchive;
     private JPanel panel9;
     private JMenuBar menuBar2;
@@ -77,6 +70,13 @@ public class MainFrame extends JFrame {
     private JButton Delchosen;
     private JButton clearQueue;
     private JButton Uploadbutton;
+    private JPanel DownLoadArchive;
+    private JScrollPane scrollPane2;
+    private JTable FileList2;
+    private JPanel panel7;
+    private JButton choseAll;
+    private JButton clearChoose;
+    private JButton downloadButton;
     private JPanel UserManage;
     private JPanel ListArchive2;
     private JScrollPane scrollPane4;
@@ -362,7 +362,9 @@ public class MainFrame extends JFrame {
                     return;
                 }
             } catch (SQLException ex) {
-                throw new RuntimeException(ex);
+
+                JOptionPane.showMessageDialog(null, "上传失败:\n"+ex, "错误", JOptionPane.ERROR_MESSAGE);
+                return;
             }
             try {
                 BufferedInputStream infile = new BufferedInputStream(new FileInputStream(temp_file));
@@ -613,13 +615,6 @@ private void SaveUserListMouseClicked(MouseEvent e) {
         FileList1 = new JTable();
         panel2 = new JPanel();
         FileSearchField = new JTextField();
-        DownLoadArchive = new JPanel();
-        scrollPane2 = new JScrollPane();
-        FileList2 = new JTable();
-        panel7 = new JPanel();
-        choseAll = new JButton();
-        clearChoose = new JButton();
-        downloadButton = new JButton();
         UploadArchive = new JPanel();
         panel9 = new JPanel();
         menuBar2 = new JMenuBar();
@@ -632,6 +627,13 @@ private void SaveUserListMouseClicked(MouseEvent e) {
         Delchosen = new JButton();
         clearQueue = new JButton();
         Uploadbutton = new JButton();
+        DownLoadArchive = new JPanel();
+        scrollPane2 = new JScrollPane();
+        FileList2 = new JTable();
+        panel7 = new JPanel();
+        choseAll = new JButton();
+        clearChoose = new JButton();
+        downloadButton = new JButton();
         UserManage = new JPanel();
         ListArchive2 = new JPanel();
         scrollPane4 = new JScrollPane();
@@ -782,80 +784,6 @@ private void SaveUserListMouseClicked(MouseEvent e) {
                     }
                     ArchiveMngTbdp.addTab("\u6863\u6848\u5217\u8868", ListArchive);
 
-                    //======== DownLoadArchive ========
-                    {
-                        DownLoadArchive.setLayout(new BorderLayout());
-
-                        //======== scrollPane2 ========
-                        {
-
-                            //---- FileList2 ----
-                            FileList2.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-                            FileList2.setAutoCreateRowSorter(true);
-                            FileList2.setShowHorizontalLines(true);
-                            FileList2.setShowVerticalLines(true);
-                            FileList2.setModel(new DefaultTableModel(
-                                new Object[][] {
-                                    {null, null, null},
-                                },
-                                new String[] {
-                                    null, null, null
-                                }
-                            ) {
-                                Class<?>[] columnTypes = new Class<?>[] {
-                                    Object.class, Object.class, Boolean.class
-                                };
-                                @Override
-                                public Class<?> getColumnClass(int columnIndex) {
-                                    return columnTypes[columnIndex];
-                                }
-                            });
-                            FileList2.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
-                            scrollPane2.setViewportView(FileList2);
-                        }
-                        DownLoadArchive.add(scrollPane2, BorderLayout.CENTER);
-
-                        //======== panel7 ========
-                        {
-                            panel7.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-                            panel7.setLayout(new BoxLayout(panel7, BoxLayout.X_AXIS));
-
-                            //---- choseAll ----
-                            choseAll.setText("\u5168\u9009");
-                            choseAll.addMouseListener(new MouseAdapter() {
-                                @Override
-                                public void mouseClicked(MouseEvent e) {
-                                    choseAllMouseClicked(e);
-                                    choseAllMouseClicked(e);
-                                }
-                            });
-                            panel7.add(choseAll);
-
-                            //---- clearChoose ----
-                            clearChoose.setText("\u6e05\u9664\u9009\u4e2d");
-                            clearChoose.setHorizontalAlignment(SwingConstants.RIGHT);
-                            clearChoose.addMouseListener(new MouseAdapter() {
-                                @Override
-                                public void mouseClicked(MouseEvent e) {
-                                    clearChooseMouseClicked(e);
-                                }
-                            });
-                            panel7.add(clearChoose);
-
-                            //---- downloadButton ----
-                            downloadButton.setText("\u4e0b\u8f7d");
-                            downloadButton.addMouseListener(new MouseAdapter() {
-                                @Override
-                                public void mouseClicked(MouseEvent e) {
-                                    downloadButtonMouseClicked(e);
-                                }
-                            });
-                            panel7.add(downloadButton);
-                        }
-                        DownLoadArchive.add(panel7, BorderLayout.SOUTH);
-                    }
-                    ArchiveMngTbdp.addTab("\u4e0b\u8f7d\u6863\u6848", DownLoadArchive);
-
                     //======== UploadArchive ========
                     {
                         UploadArchive.setLayout(new BorderLayout());
@@ -962,6 +890,80 @@ private void SaveUserListMouseClicked(MouseEvent e) {
                         UploadArchive.add(panel8, BorderLayout.SOUTH);
                     }
                     ArchiveMngTbdp.addTab("\u4e0a\u4f20\u6863\u6848", UploadArchive);
+
+                    //======== DownLoadArchive ========
+                    {
+                        DownLoadArchive.setLayout(new BorderLayout());
+
+                        //======== scrollPane2 ========
+                        {
+
+                            //---- FileList2 ----
+                            FileList2.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+                            FileList2.setAutoCreateRowSorter(true);
+                            FileList2.setShowHorizontalLines(true);
+                            FileList2.setShowVerticalLines(true);
+                            FileList2.setModel(new DefaultTableModel(
+                                new Object[][] {
+                                    {null, null, null},
+                                },
+                                new String[] {
+                                    null, null, null
+                                }
+                            ) {
+                                Class<?>[] columnTypes = new Class<?>[] {
+                                    Object.class, Object.class, Boolean.class
+                                };
+                                @Override
+                                public Class<?> getColumnClass(int columnIndex) {
+                                    return columnTypes[columnIndex];
+                                }
+                            });
+                            FileList2.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
+                            scrollPane2.setViewportView(FileList2);
+                        }
+                        DownLoadArchive.add(scrollPane2, BorderLayout.CENTER);
+
+                        //======== panel7 ========
+                        {
+                            panel7.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                            panel7.setLayout(new BoxLayout(panel7, BoxLayout.X_AXIS));
+
+                            //---- choseAll ----
+                            choseAll.setText("\u5168\u9009");
+                            choseAll.addMouseListener(new MouseAdapter() {
+                                @Override
+                                public void mouseClicked(MouseEvent e) {
+                                    choseAllMouseClicked(e);
+                                    choseAllMouseClicked(e);
+                                }
+                            });
+                            panel7.add(choseAll);
+
+                            //---- clearChoose ----
+                            clearChoose.setText("\u6e05\u9664\u9009\u4e2d");
+                            clearChoose.setHorizontalAlignment(SwingConstants.RIGHT);
+                            clearChoose.addMouseListener(new MouseAdapter() {
+                                @Override
+                                public void mouseClicked(MouseEvent e) {
+                                    clearChooseMouseClicked(e);
+                                }
+                            });
+                            panel7.add(clearChoose);
+
+                            //---- downloadButton ----
+                            downloadButton.setText("\u4e0b\u8f7d");
+                            downloadButton.addMouseListener(new MouseAdapter() {
+                                @Override
+                                public void mouseClicked(MouseEvent e) {
+                                    downloadButtonMouseClicked(e);
+                                }
+                            });
+                            panel7.add(downloadButton);
+                        }
+                        DownLoadArchive.add(panel7, BorderLayout.SOUTH);
+                    }
+                    ArchiveMngTbdp.addTab("\u4e0b\u8f7d\u6863\u6848", DownLoadArchive);
                 }
                 ArchiveManage.add(ArchiveMngTbdp, BorderLayout.CENTER);
             }

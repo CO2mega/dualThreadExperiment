@@ -1,3 +1,5 @@
+import com.alibaba.fastjson2.JSONObject;
+
 import java.io.*;
 		import java.sql.Timestamp;
 
@@ -15,8 +17,7 @@ class Doc implements Serializable {
 		this.description = description;
 		this.filename = filename;
 	}
-
-	private void writeObject(ObjectOutputStream out) throws IOException {
+		private void writeObject(ObjectOutputStream out) throws IOException {
 		out.defaultWriteObject();
 	}
 
@@ -61,6 +62,15 @@ class Doc implements Serializable {
 
 	public void setFilename(String filename) {
 		this.filename = filename;
+	}
+	public JSONObject toJSON() {
+		JSONObject doc = new JSONObject();
+		doc.put("id",getId());
+		doc.put("creator",getCreator());
+		doc.put("timestamp",getTimestamp().toString());
+		doc.put("description",getDescription());
+		doc.put("filename",getFilename());
+		return doc;
 	}
 	// Getters and setters...
 }

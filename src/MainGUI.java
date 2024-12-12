@@ -31,7 +31,7 @@ public class MainGUI {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 //在此处添加退出应用程序前需完成工作，如：关闭网络连接、关闭数据库连接等
-                DataProcessing.disconnectFromDataBase();
+               // DataProcessing.disconnectFromDataBase();
                 System.out.println("应用程序退出！");
             }
         });

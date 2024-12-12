@@ -8,7 +8,7 @@ import java.util.Vector;
 public class DataProcessing {
 
     public static boolean connectToDB = false;
-    private static Connection connection;
+    public static Connection connection;
 
     public static void connectToDatabase() {
     String driverName = "com.mysql.cj.jdbc.Driver";
@@ -138,7 +138,7 @@ public class DataProcessing {
         return null;
     }
 
-    public static AbstractUser searchUser(String name, String password) throws SQLException {
+    public static AbstractUser searchUser(String name, String password) throws SQLException {               //登录用
         if (!connectToDB) {
             throw new SQLException("Not Connected to Database");
         }

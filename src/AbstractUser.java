@@ -1,3 +1,5 @@
+import com.alibaba.fastjson2.JSONObject;
+
 import java.io.*;
 import java.sql.SQLException;
 import java.util.Enumeration;
@@ -127,5 +129,13 @@ public abstract class AbstractUser implements Serializable {
         } catch (IOException e) {
             System.out.println("上传失败：" + e.getMessage());
         }
+    }
+
+    public Object toJSON() {
+        return new JSONObject() {{
+            put("name", name);
+            put("password", password);
+            put("role", role);
+        }};
     }
 }

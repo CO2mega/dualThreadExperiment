@@ -75,70 +75,6 @@ new FormModel {
 							"title": "档案列表"
 						} )
 						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
-							name: "DownLoadArchive"
-							add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-								name: "scrollPane2"
-								add( new FormComponent( "javax.swing.JTable" ) {
-									name: "FileList2"
-									"autoResizeMode": 4
-									"autoCreateRowSorter": true
-									"showHorizontalLines": true
-									"showVerticalLines": true
-									"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector {
-										add( new java.util.Vector {
-											add( null )
-											add( null )
-											add( null )
-										} )
-									}, new java.util.Vector {
-										add( null )
-										add( null )
-										add( null )
-									}, new java.util.Vector {
-										add( null )
-										add( null )
-										add( class java.lang.Boolean )
-									}, new java.util.Vector {
-										add( null )
-										add( null )
-										add( null )
-									}, new java.util.Vector {
-										add( null )
-										add( null )
-										add( null )
-									} )
-									"font": new java.awt.Font( "Microsoft YaHei UI", 0, 14 )
-								} )
-							}, new FormLayoutConstraints( class java.lang.String ) {
-								"value": "Center"
-							} )
-							add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) ) {
-								name: "panel7"
-								"componentOrientation": sfield java.awt.ComponentOrientation RIGHT_TO_LEFT
-								add( new FormComponent( "javax.swing.JButton" ) {
-									name: "choseAll"
-									"text": "全选"
-									addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "choseAllMouseClicked", true ) )
-									addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "choseAllMouseClicked", true ) )
-								} )
-								add( new FormComponent( "javax.swing.JButton" ) {
-									name: "clearChoose"
-									"text": "清除选中"
-									"horizontalAlignment": 4
-									addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "clearChooseMouseClicked", true ) )
-								} )
-								add( new FormComponent( "javax.swing.JButton" ) {
-									name: "downloadButton"
-									"text": "下载"
-									addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "downloadButtonMouseClicked", true ) )
-								} )
-							}, new FormLayoutConstraints( class java.lang.String ) {
-								"value": "South"
-							} )
-						}, new FormLayoutConstraints( null ) {
-							"title": "下载档案"
-						} )
-						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 							name: "UploadArchive"
 							add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 								name: "panel9"
@@ -205,6 +141,70 @@ new FormModel {
 							} )
 						}, new FormLayoutConstraints( null ) {
 							"title": "上传档案"
+						} )
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+							name: "DownLoadArchive"
+							add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+								name: "scrollPane2"
+								add( new FormComponent( "javax.swing.JTable" ) {
+									name: "FileList2"
+									"autoResizeMode": 4
+									"autoCreateRowSorter": true
+									"showHorizontalLines": true
+									"showVerticalLines": true
+									"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector {
+										add( new java.util.Vector {
+											add( null )
+											add( null )
+											add( null )
+										} )
+									}, new java.util.Vector {
+										add( null )
+										add( null )
+										add( null )
+									}, new java.util.Vector {
+										add( null )
+										add( null )
+										add( class java.lang.Boolean )
+									}, new java.util.Vector {
+										add( null )
+										add( null )
+										add( null )
+									}, new java.util.Vector {
+										add( null )
+										add( null )
+										add( null )
+									} )
+									"font": new java.awt.Font( "Microsoft YaHei UI", 0, 14 )
+								} )
+							}, new FormLayoutConstraints( class java.lang.String ) {
+								"value": "Center"
+							} )
+							add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) ) {
+								name: "panel7"
+								"componentOrientation": sfield java.awt.ComponentOrientation RIGHT_TO_LEFT
+								add( new FormComponent( "javax.swing.JButton" ) {
+									name: "choseAll"
+									"text": "全选"
+									addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "choseAllMouseClicked", true ) )
+									addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "choseAllMouseClicked", true ) )
+								} )
+								add( new FormComponent( "javax.swing.JButton" ) {
+									name: "clearChoose"
+									"text": "清除选中"
+									"horizontalAlignment": 4
+									addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "clearChooseMouseClicked", true ) )
+								} )
+								add( new FormComponent( "javax.swing.JButton" ) {
+									name: "downloadButton"
+									"text": "下载"
+									addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "downloadButtonMouseClicked", true ) )
+								} )
+							}, new FormLayoutConstraints( class java.lang.String ) {
+								"value": "South"
+							} )
+						}, new FormLayoutConstraints( null ) {
+							"title": "下载档案"
 						} )
 					}, new FormLayoutConstraints( class java.lang.String ) {
 						"value": "Center"
