@@ -1,0 +1,4 @@
+自己把需要的文件分开两个项目编译
+ClientDataProcessing作为客户端的dataprocessing，直接塞文件夹里改名就能用
+所需文件全都齐了
+服务端不需修改，运行WebAdapter即可
